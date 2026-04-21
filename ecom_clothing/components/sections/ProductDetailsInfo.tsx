@@ -5,6 +5,8 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Accordion from "@/components/ui/Accordion";
 
+import { Product } from "@/hooks/useProducts";
+
 interface ColorOption {
   name: string;
   value: string;
@@ -16,6 +18,7 @@ interface SizeOption {
 }
 
 interface ProductDetailsInfoProps {
+  product: Product;
   colorOptions: ColorOption[];
   selectedColor: number;
   setSelectedColor: (idx: number) => void;
@@ -25,6 +28,7 @@ interface ProductDetailsInfoProps {
 }
 
 export default function ProductDetailsInfo({
+  product,
   colorOptions,
   selectedColor,
   setSelectedColor,
@@ -32,28 +36,40 @@ export default function ProductDetailsInfo({
   selectedSize,
   setSelectedSize,
 }: ProductDetailsInfoProps) {
+  // Discount calculation
+  const hasDiscount = !!product.originalPrice;
+  const currentPrice = parseFloat(product.price.replace(/[^0-9.]/g, ""));
+  const oldPrice = hasDiscount ? parseFloat(product.originalPrice.replace(/[^0-9.]/g, "")) : 0;
+  const discountPercent = hasDiscount ? Math.round(((oldPrice - currentPrice) / oldPrice) * 100) : 0;
+
   return (
     <div className="lg:col-span-5 flex flex-col">
       {/* Header & Price */}
       <div className="mb-8">
-        <Badge variant="outline" className="mb-3">
-          New Arrival
-        </Badge>
+        {product.badge && (
+          <Badge variant="outline" className="mb-3">
+            {product.badge}
+          </Badge>
+        )}
         <h1 className="text-3xl lg:text-4xl font-medium tracking-tight text-zinc-900 mb-4">
-          Structure Wool Coat
+          {product.name}
         </h1>
 
         <div className="flex items-center gap-4 mb-5">
-          <span className="text-2xl font-medium text-zinc-900">$320</span>
-          <span className="text-lg text-zinc-400 line-through decoration-zinc-300">
-            $400
-          </span>
-          <Badge
-            variant="warning"
-            className="lowercase tracking-normal bg-red-50 text-red-700 border-red-100"
-          >
-            20% Off
-          </Badge>
+          <span className="text-2xl font-medium text-zinc-900">{product.price}</span>
+          {hasDiscount && (
+            <>
+              <span className="text-lg text-zinc-400 line-through decoration-zinc-300">
+                {product.originalPrice}
+              </span>
+              <Badge
+                variant="warning"
+                className="lowercase tracking-normal bg-red-50 text-red-700 border-red-100"
+              >
+                {discountPercent}% Off
+              </Badge>
+            </>
+          )}
         </div>
 
         {/* Reviews */}

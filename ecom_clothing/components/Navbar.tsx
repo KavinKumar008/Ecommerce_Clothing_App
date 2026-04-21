@@ -5,9 +5,11 @@ import { Menu, Search, User, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import Button from "./ui/Button";
 import Container from "./ui/Container";
+import AuthModal from "./modals/AuthModal";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 inset-x-0 z-50 border-b border-zinc-100 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60">
@@ -50,7 +52,7 @@ export default function Navbar() {
             <Search className="w-5 h-5" />
           </Button>
           <Button
-            href="/account"
+            onClick={() => setIsAuthModalOpen(true)}
             variant="ghost"
             size="icon"
             className="hidden lg:flex"
@@ -92,15 +94,23 @@ export default function Navbar() {
           >
             Editorial
           </Link>
-          <Link
-            href="/account"
-            className="block text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors"
-            onClick={() => setMobileMenuOpen(false)}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setIsAuthModalOpen(true);
+            }}
+            className="block w-full text-left text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors"
           >
             Account
-          </Link>
+          </button>
         </div>
       )}
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={setIsAuthModalOpen} 
+      />
     </nav>
   );
 }

@@ -44,6 +44,13 @@ export const productApi = {
 };
 
 /**
+ * Content API Services (Brand Story, Hero, etc.)
+ */
+export const contentApi = {
+  getBrandStory: () => api.get("/content/brand-story"),
+};
+
+/**
  * Account/Order API Services (Future)
  */
 export const accountApi = {

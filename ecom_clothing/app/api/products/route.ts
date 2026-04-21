@@ -5,11 +5,11 @@ import Product from "@/models/Product";
 export async function GET() {
   try {
     await dbConnect();
-    
+
     // Fetch all products from MongoDB
     const products = await Product.find({}).sort({ createdAt: -1 });
 
-    return NextResponse.json(products);
+    return NextResponse.json({ status: true, products });
   } catch (error: any) {
     console.error("❌ API Error [GET /api/products]:", error);
     return NextResponse.json(

@@ -44,7 +44,7 @@ export default function ProductCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </Link>
-        
+
         {/* Overlay Actions */}
         <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-10">
           <button
@@ -55,7 +55,7 @@ export default function ProductCard({
           </button>
         </div>
 
-        <button 
+        <button
           onClick={onFavorite}
           className="absolute top-3 right-3 p-1.5 text-zinc-400 hover:text-zinc-900 bg-white/0 hover:bg-white/90 rounded-full backdrop-blur-sm transition-all z-10"
         >
@@ -85,7 +85,7 @@ export default function ProductCard({
             </span>
           )}
         </div>
-        
+
         <div className="flex flex-col items-end">
           <span className={`text-sm font-medium ${originalPrice ? "text-red-700" : "text-zinc-900"}`}>
             {price}

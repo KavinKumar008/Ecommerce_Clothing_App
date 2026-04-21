@@ -8,6 +8,7 @@ export interface IProduct extends Document {
   price: string;
   originalPrice?: string;
   image: string;
+  images?: string[]; // Additional gallery images for the detail page
   badge?: string;
   categories: string[];
   sizes: string[];
@@ -39,6 +40,10 @@ const ProductSchema = new Schema<IProduct>(
     image: {
       type: String,
       required: true,
+    },
+    images: {
+      type: [String],
+      default: [],
     },
     badge: String,
     categories: {

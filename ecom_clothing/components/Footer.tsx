@@ -107,10 +107,10 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-zinc-100 text-xs text-zinc-400">
           <div className="flex gap-4 mb-4 md:mb-0">
-            <Link href="#" className="hover:text-zinc-600">
+            <Link href="/privacy-policy" className="hover:text-zinc-600">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-zinc-600">
+            <Link href="/terms-of-service" className="hover:text-zinc-600">
               Terms of Service
             </Link>
           </div>
