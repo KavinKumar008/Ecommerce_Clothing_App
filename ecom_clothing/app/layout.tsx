@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/components/QueryProvider";
 import { Toaster } from "sonner";
+import { AuthModalProvider } from "@/context/AuthModalContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,10 +28,12 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} antialiased`}>
       <body className="min-h-screen flex flex-col font-sans bg-white text-zinc-900 selection:bg-zinc-900 selection:text-white">
         <QueryProvider>
-          <Toaster richColors closeButton position="top-right" />
-          <Navbar />
-          <main className="flex-grow pt-16">{children}</main>
-          <Footer />
+          <AuthModalProvider>
+            <Toaster richColors closeButton position="top-right" />
+            <Navbar />
+            <main className="flex-grow pt-16">{children}</main>
+            <Footer />
+          </AuthModalProvider>
         </QueryProvider>
       </body>
     </html>

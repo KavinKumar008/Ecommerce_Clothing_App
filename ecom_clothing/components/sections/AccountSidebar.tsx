@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LogOut, LucideIcon } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { useLogout } from "@/hooks/useAuth";
 
 interface SidebarLink {
   label: string;
@@ -14,6 +15,8 @@ interface AccountSidebarProps {
 }
 
 export default function AccountSidebar({ sidebarLinks }: AccountSidebarProps) {
+  const { mutateAsync: logout } = useLogout();
+
   return (
     <aside className="lg:col-span-3">
       <nav className="flex lg:flex-col gap-2 overflow-x-auto no-scrollbar pb-4 lg:pb-0 border-b border-zinc-100 lg:border-none">
@@ -33,6 +36,7 @@ export default function AccountSidebar({ sidebarLinks }: AccountSidebarProps) {
         ))}
         <Button
           variant="ghost"
+          onClick={() => logout()}
           className="justify-start gap-3 px-4 text-zinc-400 hover:text-red-700 hover:bg-red-50 mt-2 lg:mt-6"
         >
           <LogOut className="w-4 h-4" />

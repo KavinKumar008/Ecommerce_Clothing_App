@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/ui/Button";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth.schema";
+
+import { useLogin } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -14,6 +17,7 @@ interface LoginFormProps {
 
 export default function LoginForm({ onSuccess }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const { mutateAsync: login } = useLogin();
 
   const {
     register,
@@ -23,12 +27,15 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginInput) => {
-    console.log("Login Data:", data);
-    // Mimic API call
-    setTimeout(() => {
+  const onSubmit = async (data: LoginInput) => {
+    try {
+      await login(data);
+      toast.success("Welcome back!");
       onSuccess?.();
-    }, 1000);
+    } catch (error) {
+      // Error handling is managed by the axios interceptor (sonner toast)
+      console.error("Login failed:", error);
+    }
   };
 
   return (
@@ -41,25 +48,25 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-[0.1em]">
-            Email address
+            Mobile Number
           </label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-              <Mail className={`w-4 h-4 transition-colors ${errors.email ? "text-red-500" : "text-zinc-400 group-focus-within:text-zinc-900"}`} />
+              <Phone className={`w-4 h-4 transition-colors ${errors.phone ? "text-red-500" : "text-zinc-400 group-focus-within:text-zinc-900"}`} />
             </div>
             <input
-              {...register("email")}
-              type="email"
-              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${
-                errors.email ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
-              }`}
-              placeholder="hello@example.com"
+              {...register("phone")}
+              type="tel"
+              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${errors.phone ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
+                }`}
+              placeholder="10 digit mobile number"
+              maxLength={10}
             />
           </div>
-          {errors.email && (
+          {errors.phone && (
             <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-red-600 font-medium animate-in fade-in slide-in-from-top-1">
               <AlertCircle className="w-3 h-3" />
-              {errors.email.message}
+              {errors.phone.message}
             </p>
           )}
         </div>
@@ -83,9 +90,8 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
             <input
               {...register("password")}
               type={showPassword ? "text" : "password"}
-              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-zinc-400 ${
-                errors.password ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
-              }`}
+              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-zinc-400 ${errors.password ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
+                }`}
               placeholder="••••••••"
             />
             <button

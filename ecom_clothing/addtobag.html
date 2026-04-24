@@ -1,0 +1,401 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Shopping Bag</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e4e4e7;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4d4d8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom details accordion styling */
+        details>summary {
+            list-style: none;
+        }
+
+        details>summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* Number input arrows removal */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-white text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav
+        class="fixed top-0 inset-x-0 z-50 border-b border-zinc-100 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60">
+        <div class="max-w-screen-2xl mx-auto px-6 h-16 flex items-center justify-between">
+            <!-- Mobile Menu Trigger -->
+            <button class="lg:hidden p-2 -ml-2 text-zinc-500 hover:text-zinc-900 transition-colors">
+                <iconify-icon icon="solar:hamburger-menu-linear" stroke-width="1.5" class="text-xl"></iconify-icon>
+            </button>
+
+            <!-- Links (Left - Desktop) -->
+            <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-zinc-500">
+                <a href="#" class="hover:text-zinc-900 transition-colors">Shop</a>
+                <a href="#" class="hover:text-zinc-900 transition-colors">Collections</a>
+                <a href="#" class="hover:text-zinc-900 transition-colors">Editorial</a>
+            </div>
+
+            <!-- Logo -->
+            <a href="#"
+                class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-medium tracking-tighter text-xl">
+                AURA
+            </a>
+
+            <!-- Icons (Right) -->
+            <div class="flex items-center gap-4 lg:gap-6">
+                <button class="text-zinc-500 hover:text-zinc-900 transition-colors">
+                    <iconify-icon icon="solar:magnifer-linear" stroke-width="1.5" class="text-xl"></iconify-icon>
+                </button>
+                <button class="hidden lg:block text-zinc-500 hover:text-zinc-900 transition-colors">
+                    <iconify-icon icon="solar:user-linear" stroke-width="1.5" class="text-xl"></iconify-icon>
+                </button>
+                <button class="relative text-zinc-900 transition-colors group">
+                    <iconify-icon icon="solar:cart-large-minimalistic-linear" stroke-width="1.5"
+                        class="text-xl"></iconify-icon>
+                    <span
+                        class="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 text-[9px] font-medium text-white border border-white">
+                        2
+                    </span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content: Cart -->
+    <main class="flex-grow pt-32 pb-24">
+        <div class="max-w-screen-xl mx-auto px-6">
+
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                <h1 class="text-3xl lg:text-4xl font-medium tracking-tight text-zinc-900">Shopping Bag</h1>
+                <a href="#"
+                    class="text-sm text-zinc-500 hover:text-zinc-900 underline underline-offset-4 decoration-zinc-200 hover:decoration-zinc-900 transition-all">Continue
+                    Shopping</a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+                <!-- Left: Cart Items List (Col Span 7) -->
+                <div class="lg:col-span-7 xl:col-span-8">
+
+                    <div
+                        class="hidden sm:grid grid-cols-12 gap-4 pb-4 border-b border-zinc-200 text-xs font-medium text-zinc-400 uppercase tracking-wider">
+                        <div class="col-span-7">Product</div>
+                        <div class="col-span-3 text-center">Quantity</div>
+                        <div class="col-span-2 text-right">Total</div>
+                    </div>
+
+                    <ul
+                        class="divide-y divide-zinc-100 sm:divide-zinc-200 border-t border-zinc-100 sm:border-transparent">
+
+                        <!-- Item 1 -->
+                        <li class="py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
+                            <!-- Product Details -->
+                            <div class="col-span-1 sm:col-span-7 flex gap-4 sm:gap-6">
+                                <a href="#"
+                                    class="w-24 h-32 sm:w-28 sm:h-36 flex-shrink-0 bg-zinc-50 rounded-sm overflow-hidden border border-zinc-100 block group">
+                                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&amp;w=1887&amp;auto=format&amp;fit=crop"
+                                        alt="Structure Wool Coat"
+                                        class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                                </a>
+                                <div class="flex flex-col justify-start py-1">
+                                    <h3 class="text-base font-medium text-zinc-900 leading-tight mb-1">
+                                        <a href="#"
+                                            class="hover:underline underline-offset-4 decoration-zinc-300">Structure
+                                            Wool Coat</a>
+                                    </h3>
+                                    <div class="text-sm text-zinc-500 space-y-0.5 mb-3">
+                                        <p>Color: Charcoal</p>
+                                        <p>Size: M</p>
+                                    </div>
+                                    <p class="text-base font-medium text-zinc-900 sm:hidden block mb-4">$320 <span
+                                            class="text-xs text-zinc-400 line-through ml-2 font-normal">$400</span></p>
+
+                                    <div class="mt-auto flex items-center gap-4">
+                                        <button
+                                            class="text-xs text-zinc-400 hover:text-red-600 transition-colors flex items-center gap-1 group">
+                                            <iconify-icon icon="solar:trash-bin-trash-linear"
+                                                class="text-sm group-hover:scale-110 transition-transform"></iconify-icon>
+                                            <span
+                                                class="underline underline-offset-4 decoration-transparent group-hover:decoration-red-200">Remove</span>
+                                        </button>
+                                        <button
+                                            class="text-xs text-zinc-400 hover:text-zinc-900 transition-colors flex items-center gap-1 group">
+                                            <iconify-icon icon="solar:heart-linear"
+                                                class="text-sm group-hover:scale-110 transition-transform"></iconify-icon>
+                                            <span
+                                                class="underline underline-offset-4 decoration-transparent group-hover:decoration-zinc-300">Move
+                                                to Wishlist</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity (Mobile: bottom left, Desktop: center) -->
+                            <div class="col-span-1 sm:col-span-3 flex justify-start sm:justify-center">
+                                <div class="flex items-center border border-zinc-200 rounded-sm h-10 bg-white">
+                                    <button
+                                        class="w-10 h-full flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-colors focus:outline-none text-lg font-medium">
+                                        −
+                                    </button>
+                                    <input type="number" value="1" min="1" max="10"
+                                        class="w-10 text-center text-sm font-medium text-zinc-900 bg-transparent border-x border-zinc-100 h-full focus:outline-none appearance-none">
+                                    <button
+                                        class="w-10 h-full flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-colors focus:outline-none text-lg font-medium">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Price (Desktop only, mobile handled above) -->
+                            <div class="hidden sm:block col-span-2 text-right">
+                                <p class="text-base font-medium text-zinc-900">$320</p>
+                                <p class="text-xs text-zinc-400 line-through mt-0.5">$400</p>
+                            </div>
+                        </li>
+
+                        <!-- Item 2 -->
+                        <li class="py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
+                            <!-- Product Details -->
+                            <div class="col-span-1 sm:col-span-7 flex gap-4 sm:gap-6">
+                                <a href="#"
+                                    class="w-24 h-32 sm:w-28 sm:h-36 flex-shrink-0 bg-zinc-50 rounded-sm overflow-hidden border border-zinc-100 block group">
+                                    <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&amp;w=1972&amp;auto=format&amp;fit=crop"
+                                        alt="Essential Cotton T-Shirt"
+                                        class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                                </a>
+                                <div class="flex flex-col justify-start py-1">
+                                    <h3 class="text-base font-medium text-zinc-900 leading-tight mb-1">
+                                        <a href="#"
+                                            class="hover:underline underline-offset-4 decoration-zinc-300">Essential
+                                            Cotton T-Shirt</a>
+                                    </h3>
+                                    <div class="text-sm text-zinc-500 space-y-0.5 mb-3">
+                                        <p>Color: Optic White</p>
+                                        <p>Size: L</p>
+                                    </div>
+                                    <p class="text-base font-medium text-zinc-900 sm:hidden block mb-4">$85</p>
+
+                                    <div class="mt-auto flex items-center gap-4">
+                                        <button
+                                            class="text-xs text-zinc-400 hover:text-red-600 transition-colors flex items-center gap-1 group">
+                                            <iconify-icon icon="solar:trash-bin-trash-linear"
+                                                class="text-sm group-hover:scale-110 transition-transform"></iconify-icon>
+                                            <span
+                                                class="underline underline-offset-4 decoration-transparent group-hover:decoration-red-200">Remove</span>
+                                        </button>
+                                        <button
+                                            class="text-xs text-zinc-400 hover:text-zinc-900 transition-colors flex items-center gap-1 group">
+                                            <iconify-icon icon="solar:heart-linear"
+                                                class="text-sm group-hover:scale-110 transition-transform"></iconify-icon>
+                                            <span
+                                                class="underline underline-offset-4 decoration-transparent group-hover:decoration-zinc-300">Move
+                                                to Wishlist</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="col-span-1 sm:col-span-3 flex justify-start sm:justify-center">
+                                <div class="flex items-center border border-zinc-200 rounded-sm h-10 bg-white">
+                                    <button
+                                        class="w-10 h-full flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-colors focus:outline-none text-lg font-medium">
+                                        −
+                                    </button>
+                                    <input type="number" value="2" min="1" max="10"
+                                        class="w-10 text-center text-sm font-medium text-zinc-900 bg-transparent border-x border-zinc-100 h-full focus:outline-none appearance-none">
+                                    <button
+                                        class="w-10 h-full flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-colors focus:outline-none text-lg font-medium">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="hidden sm:block col-span-2 text-right">
+                                <p class="text-base font-medium text-zinc-900">$170</p>
+                                <p class="text-xs text-zinc-400 mt-0.5">$85 each</p>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <!-- Right: Order Summary (Col Span 5) -->
+                <div class="lg:col-span-5 xl:col-span-4">
+                    <div class="bg-zinc-50/50 rounded-sm border border-zinc-100 p-6 lg:p-8 lg:sticky lg:top-24">
+
+                        <h2 class="text-lg font-medium tracking-tight text-zinc-900 mb-6">Order Summary</h2>
+
+                        <div class="space-y-4 text-sm text-zinc-500 pb-6 border-b border-zinc-200 mb-6">
+                            <div class="flex justify-between items-center">
+                                <span>Subtotal</span>
+                                <span class="text-zinc-900">$490.00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Shipping</span>
+                                <span>Calculated at checkout</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Discounts</span>
+                                <span class="text-green-600">-$80.00</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-end mb-8">
+                            <span class="text-base font-medium text-zinc-900">Total</span>
+                            <div class="text-right">
+                                <span class="text-2xl font-medium tracking-tight text-zinc-900 block">$410.00</span>
+                                <span class="text-xs text-zinc-400">USD, incl. VAT</span>
+                            </div>
+                        </div>
+
+                        <button
+                            class="w-full bg-zinc-900 text-white py-4 rounded-sm text-sm font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 shadow-sm mb-4">
+                            Proceed to Checkout
+                            <iconify-icon icon="solar:arrow-right-linear" stroke-width="1.5"
+                                class="text-lg"></iconify-icon>
+                        </button>
+
+                        <button
+                            class="w-full bg-transparent border border-zinc-200 text-zinc-900 py-4 rounded-sm text-sm font-medium hover:border-zinc-900 transition-colors flex items-center justify-center gap-2 mb-8">
+                            <iconify-icon icon="fa-brands:apple" stroke-width="1.5" class="text-lg"></iconify-icon>
+                            Pay
+                        </button>
+
+                        <!-- Promo Code Accordion -->
+                        <details class="group border-t border-zinc-200 pt-4">
+                            <summary
+                                class="flex justify-between items-center font-medium cursor-pointer text-sm text-zinc-600 hover:text-zinc-900 transition-colors select-none">
+                                <span class="flex items-center gap-2">
+                                    <iconify-icon icon="solar:ticket-sale-linear" class="text-lg"></iconify-icon>
+                                    Add Promo Code
+                                </span>
+                                <span
+                                    class="transition-transform duration-300 group-open:-rotate-180 text-zinc-400 flex items-center">
+                                    <iconify-icon icon="solar:alt-arrow-down-linear" stroke-width="1.5"></iconify-icon>
+                                </span>
+                            </summary>
+                            <div class="pt-4 pb-2">
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="Enter code"
+                                        class="flex-grow bg-white border border-zinc-200 rounded-sm px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 transition-all">
+                                    <button
+                                        class="bg-zinc-100 text-zinc-900 px-4 py-2 rounded-sm text-sm font-medium hover:bg-zinc-200 transition-colors border border-zinc-200">Apply</button>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- Trust Badges -->
+                        <div class="mt-8 pt-6 border-t border-zinc-200 grid grid-cols-2 gap-4">
+                            <div class="flex flex-col items-center text-center gap-2">
+                                <iconify-icon icon="solar:shield-check-linear"
+                                    class="text-zinc-400 text-xl"></iconify-icon>
+                                <span class="text-xs text-zinc-500">Secure Checkout</span>
+                            </div>
+                            <div class="flex flex-col items-center text-center gap-2">
+                                <iconify-icon icon="solar:box-linear" class="text-zinc-400 text-xl"></iconify-icon>
+                                <span class="text-xs text-zinc-500">Free Returns within 30 days</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-zinc-100 pt-16 pb-8 mt-auto">
+        <div class="max-w-screen-2xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                <div>
+                    <h4 class="text-xs font-medium text-zinc-900 uppercase tracking-wider mb-4">Shop</h4>
+                    <ul class="space-y-3 text-sm text-zinc-500">
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">All Products</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Accessories</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Gift Cards</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-medium text-zinc-900 uppercase tracking-wider mb-4">Support</h4>
+                    <ul class="space-y-3 text-sm text-zinc-500">
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Shipping &amp; Returns</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Size Guide</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-medium text-zinc-900 uppercase tracking-wider mb-4">Social</h4>
+                    <ul class="space-y-3 text-sm text-zinc-500">
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Instagram</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">TikTok</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Twitter</a></li>
+                        <li><a href="#" class="hover:text-zinc-900 transition-colors">Pinterest</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#" class="font-medium tracking-tighter text-xl block mb-4 text-zinc-900">AURA</a>
+                    <p class="text-xs text-zinc-400 leading-relaxed max-w-xs">
+                        Defining the modern silhouette through texture, form, and function.
+                        <br><br>
+                        © 2024 Aura Studios.<br>All rights reserved.
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-zinc-100 text-xs text-zinc-400">
+                <div class="flex gap-4 mb-4 md:mb-0">
+                    <a href="#" class="hover:text-zinc-600 transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-zinc-600 transition-colors">Terms of Service</a>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500/80 ring-2 ring-green-500/20"></span>
+                    <span>Systems Operational</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

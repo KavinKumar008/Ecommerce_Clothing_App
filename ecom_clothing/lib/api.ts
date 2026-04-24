@@ -1,38 +1,88 @@
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { toast } from "sonner";
-import axios from "axios";
 
-// Create a centralized axios instance
+// Storage keys
+export const AUTH_TOKEN_KEY = "auth_token";
+export const USER_DATA_KEY = "user_data";
+
+// Create axios instance
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: "/api", // Using internal Next.js API routes
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 30000, // 30 second timeout
 });
 
-// Response interceptor for generic error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const status = error.response?.status;
-    const message = error.response?.data?.message || error.message || "An unexpected error occurred";
-
-    // Global Error Notifications using sonner
-    if (status === 401 || status === 403) {
-      toast.error("Session expired. Please log in again.");
-    } else if (status === 404) {
-      toast.error("The requested resource was not found. (404)");
-    } else if (status === 400) {
-      toast.error(message || "Invalid request.");
-    } else if (status >= 500) {
-      toast.error("Server error. Our team is working on it.");
-    } else {
-      toast.error(message);
+// Request interceptor - attach auth token
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem(AUTH_TOKEN_KEY);
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
-
-    console.error(`❌ API Error [${status}]:`, message);
+    return config;
+  },
+  (error) => {
     return Promise.reject(error);
   }
 );
+
+// Response interceptor - handle errors globally
+api.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<any>) => {
+    // Network error
+    if (!error.response) {
+      toast.error("Network error. Please check your connection.");
+      return Promise.reject(error);
+    }
+
+    const { status, data } = error.response;
+
+    // Extract error message
+    const errorMessage =
+      data?.message || data?.detail || data?.error || "An error occurred";
+
+    switch (status) {
+      case 401:
+        // Unauthorized - clear auth (but don't redirect here to avoid infinite loops)
+        if (typeof window !== "undefined") {
+          localStorage.removeItem(AUTH_TOKEN_KEY);
+          localStorage.removeItem(USER_DATA_KEY);
+        }
+        toast.error(errorMessage || "Session expired. Please login again.");
+        break;
+
+      case 400:
+        toast.error(errorMessage);
+        break;
+
+      case 403:
+        toast.error("Access denied.");
+        break;
+
+      case 404:
+        toast.error("Resource not found.");
+        break;
+
+      case 500:
+      case 502:
+      case 503:
+        toast.error("Server error. Please try again later.");
+        break;
+
+      default:
+        toast.error(errorMessage);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default api;
 
 /**
  * Product API Services
@@ -57,4 +107,15 @@ export const accountApi = {
   getOrders: () => api.get("/account/orders"),
 };
 
-export default api;
+/**
+ * Cart API Services
+ */
+export const cartApi = {
+  getCart: () => api.get("/cart"),
+  addToCart: (data: { productId: string; color: string; size: string; quantity?: number }) => 
+    api.post("/cart", data),
+  updateItemQuantity: (itemId: string, quantity: number) => 
+    api.put("/cart", { itemId, quantity }),
+  removeItem: (itemId: string) => 
+    api.delete(`/cart?itemId=${itemId}`),
+};

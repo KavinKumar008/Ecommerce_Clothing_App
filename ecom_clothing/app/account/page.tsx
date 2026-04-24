@@ -1,9 +1,14 @@
+"use client";
+
 import AccountSidebar from "@/components/sections/AccountSidebar";
 import ProfileOverview from "@/components/sections/ProfileOverview";
 import OrderHistory from "@/components/sections/OrderHistory";
 import Container from "@/components/ui/Container";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { User, ShoppingBag, MapPin, CreditCard, Settings } from "lucide-react";
+import { useCurrentUser, useIsAuthenticated } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const sidebarLinks = [
   { label: "Profile", icon: User, href: "#" },
@@ -53,6 +58,34 @@ const orders = [
 ];
 
 export default function AccountPage() {
+  const { data: user, isLoading: isUserLoading } = useCurrentUser();
+  const { data: isAuthenticated, isLoading: isAuthLoading } = useIsAuthenticated();
+  const router = useRouter();
+
+  const isLoading = isUserLoading || isAuthLoading;
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading || !isAuthenticated) {
+    return (
+      <div className="h-[60vh] flex items-center justify-center">
+        <div className="animate-pulse text-zinc-400">Loading your account...</div>
+      </div>
+    );
+  }
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+    : "??";
+
   return (
     <div className="pb-20">
       <Container className="pt-8">
@@ -74,9 +107,9 @@ export default function AccountPage() {
 
           <div className="lg:col-span-9 flex flex-col">
             <ProfileOverview
-              name="John Doe"
-              email="johndoe@example.com"
-              initials="JD"
+              name={user?.name || ""}
+              email={user?.email || ""}
+              initials={initials}
             />
 
             <OrderHistory orders={orders} />

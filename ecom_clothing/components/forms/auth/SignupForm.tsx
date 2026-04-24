@@ -1,17 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Lock, User, Check, AlertCircle } from "lucide-react";
+import { Mail, Lock, User, Check, AlertCircle, Phone, Calendar } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/ui/Button";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth.schema";
+
+import { useSignup } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 interface SignupFormProps {
   onSuccess?: () => void;
 }
 
 export default function SignupForm({ onSuccess }: SignupFormProps) {
+  const { mutateAsync: signup } = useSignup();
+  console.log(signup, "slkdjasldkjaskldjaslkdj");
   const {
     register,
     handleSubmit,
@@ -26,13 +31,16 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
   });
 
   const agreedToTerms = watch("agreedToTerms");
+  const gender = watch("gender");
 
-  const onSubmit = (data: SignupInput) => {
-    console.log("Signup Data:", data);
-    // Mimic API call
-    setTimeout(() => {
+  const onSubmit = async (data: SignupInput) => {
+    try {
+      await signup(data);
+      toast.success("Account created successfully! Please log in.");
       onSuccess?.();
-    }, 1000);
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
 
   return (
@@ -54,9 +62,8 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
             <input
               {...register("name")}
               type="text"
-              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${
-                errors.name ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
-              }`}
+              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${errors.name ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
+                }`}
               placeholder="Jane Doe"
             />
           </div>
@@ -79,9 +86,8 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
             <input
               {...register("email")}
               type="email"
-              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${
-                errors.email ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
-              }`}
+              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${errors.email ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
+                }`}
               placeholder="hello@example.com"
             />
           </div>
@@ -95,6 +101,88 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
 
         <div>
           <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-[0.1em]">
+            Mobile Number
+          </label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+              <Phone className={`w-4 h-4 transition-colors ${errors.phone ? "text-red-500" : "text-zinc-400 group-focus-within:text-zinc-900"}`} />
+            </div>
+            <input
+              {...register("phone")}
+              type="tel"
+              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${errors.phone ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
+                }`}
+              placeholder="10 digit mobile number"
+              maxLength={10}
+            />
+          </div>
+          {errors.phone && (
+            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-red-600 font-medium animate-in fade-in slide-in-from-top-1">
+              <AlertCircle className="w-3 h-3" />
+              {errors.phone.message}
+            </p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-[0.1em]">
+              Date of Birth
+            </label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                <Calendar className={`w-4 h-4 transition-colors ${errors.dob ? "text-red-500" : "text-zinc-400 group-focus-within:text-zinc-900"}`} />
+              </div>
+              <input
+                {...register("dob")}
+                type="date"
+                className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all ${errors.dob ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
+                  }`}
+              />
+            </div>
+            {errors.dob && (
+              <p className="mt-1.5 text-[11px] text-red-600 font-medium animate-in fade-in slide-in-from-top-1">
+                {errors.dob.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-[0.1em]">
+              Gender
+            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setValue("gender", "male", { shouldValidate: true })}
+                className={`flex-1 py-3 text-sm font-medium rounded-sm border transition-all ${gender === "male"
+                    ? "bg-zinc-900 border-zinc-900 text-white"
+                    : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:border-zinc-400"
+                  } ${errors.gender ? "border-red-500" : ""}`}
+              >
+                Male
+              </button>
+              <button
+                type="button"
+                onClick={() => setValue("gender", "female", { shouldValidate: true })}
+                className={`flex-1 py-3 text-sm font-medium rounded-sm border transition-all ${gender === "female"
+                    ? "bg-zinc-900 border-zinc-900 text-white"
+                    : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:border-zinc-400"
+                  } ${errors.gender ? "border-red-500" : ""}`}
+              >
+                Female
+              </button>
+            </div>
+            {errors.gender && (
+              <p className="mt-1.5 text-[11px] text-red-600 font-medium animate-in fade-in slide-in-from-top-1">
+                {errors.gender.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[10px] font-medium text-zinc-500 mb-1.5 uppercase tracking-[0.1em]">
             Password
           </label>
           <div className="relative group">
@@ -104,9 +192,8 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
             <input
               {...register("password")}
               type="password"
-              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${
-                errors.password ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
-              }`}
+              className={`w-full bg-zinc-50 border rounded-sm py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 ${errors.password ? "border-red-500 focus:bg-red-50/30" : "border-zinc-200 focus:border-zinc-400 focus:bg-white"
+                }`}
               placeholder="At least 8 characters"
             />
           </div>
@@ -120,17 +207,16 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
 
         {/* Custom Checkbox */}
         <div>
-          <div 
+          <div
             className="flex items-start gap-3 pt-2 cursor-pointer group"
             onClick={() => setValue("agreedToTerms", !agreedToTerms, { shouldValidate: true })}
           >
             <div
-              className={`w-4 h-4 mt-0.5 rounded-sm border flex items-center justify-center flex-shrink-0 transition-all ${
-                errors.agreedToTerms ? "border-red-500 bg-red-50" :
-                agreedToTerms 
-                  ? "bg-zinc-900 border-zinc-900" 
-                  : "bg-white border-zinc-300 group-hover:border-zinc-400"
-              }`}
+              className={`w-4 h-4 mt-0.5 rounded-sm border flex items-center justify-center flex-shrink-0 transition-all ${errors.agreedToTerms ? "border-red-500 bg-red-50" :
+                  agreedToTerms
+                    ? "bg-zinc-900 border-zinc-900"
+                    : "bg-white border-zinc-300 group-hover:border-zinc-400"
+                }`}
             >
               <Check className={`w-3 h-3 text-white transition-opacity ${agreedToTerms ? "opacity-100" : "opacity-0"}`} strokeWidth={3} />
             </div>

@@ -6,10 +6,27 @@ import { useState } from "react";
 import Button from "./ui/Button";
 import Container from "./ui/Container";
 import AuthModal from "./modals/AuthModal";
+import { useIsAuthenticated } from "@/hooks/useAuth";
+import { useAuthModal } from "@/context/AuthModalContext";
+import { useCartQuery } from "@/hooks/useCart";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { data: isAuthenticated } = useIsAuthenticated();
+  const { isAuthModalOpen, setIsAuthModalOpen, openAuthModal } = useAuthModal();
+  const router = useRouter();
+
+  const { data: cartData } = useCartQuery(!!isAuthenticated);
+  const cartItemCount = cartData?.cart?.items?.length || 0;
+
+  const handleAccountClick = () => {
+    if (isAuthenticated) {
+      router.push("/account");
+    } else {
+      openAuthModal();
+    }
+  };
 
   return (
     <nav className="fixed top-0 inset-x-0 z-50 border-b border-zinc-100 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60">
@@ -52,7 +69,7 @@ export default function Navbar() {
             <Search className="w-5 h-5" />
           </Button>
           <Button
-            onClick={() => setIsAuthModalOpen(true)}
+            onClick={handleAccountClick}
             variant="ghost"
             size="icon"
             className="hidden lg:flex"
@@ -60,12 +77,13 @@ export default function Navbar() {
           >
             <User className="w-5 h-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="group relative" aria-label="Cart">
+          <Button onClick={() => router.push("/cart")} variant="ghost" size="icon" className="group relative" aria-label="Cart">
             <ShoppingBag className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-900"></span>
-            </span>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 text-[9px] font-medium text-white border border-white">
+                {cartItemCount}
+              </span>
+            )}
           </Button>
         </div>
       </Container>
@@ -97,7 +115,7 @@ export default function Navbar() {
           <button
             onClick={() => {
               setMobileMenuOpen(false);
-              setIsAuthModalOpen(true);
+              handleAccountClick();
             }}
             className="block w-full text-left text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors"
           >
@@ -107,9 +125,9 @@ export default function Navbar() {
       )}
 
       {/* Auth Modal */}
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={setIsAuthModalOpen} 
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={setIsAuthModalOpen}
       />
     </nav>
   );

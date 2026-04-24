@@ -6,6 +6,10 @@ import Badge from "@/components/ui/Badge";
 import Accordion from "@/components/ui/Accordion";
 
 import { Product } from "@/hooks/useProducts";
+import { useIsAuthenticated } from "@/hooks/useAuth";
+import { useAuthModal } from "@/context/AuthModalContext";
+import { useAddToCart } from "@/hooks/useCart";
+import { toast } from "sonner";
 
 interface ColorOption {
   name: string;
@@ -36,6 +40,10 @@ export default function ProductDetailsInfo({
   selectedSize,
   setSelectedSize,
 }: ProductDetailsInfoProps) {
+  const { data: isAuthenticated } = useIsAuthenticated();
+  const { openAuthModal } = useAuthModal();
+  const { mutate: addToCart, isPending } = useAddToCart();
+  
   // Discount calculation
   const hasDiscount = !!product.originalPrice;
   const currentPrice = parseFloat(product.price.replace(/[^0-9.]/g, ""));
@@ -176,9 +184,34 @@ export default function ProductDetailsInfo({
 
       {/* Actions */}
       <div className="flex gap-4 mb-10">
-        <Button className="flex-grow py-4 gap-2">
+        <Button 
+          className="flex-grow py-4 gap-2"
+          disabled={isPending}
+          onClick={() => {
+            if (isAuthenticated) {
+              if (!product._id) {
+                toast.error("Product ID not found.");
+                return;
+              }
+              const color = colorOptions[selectedColor]?.name;
+              const size = sizeOptions[selectedSize]?.label;
+              if (!color || !size) {
+                 toast.error("Please select a color and size");
+                 return;
+              }
+              addToCart({
+                productId: product._id,
+                color,
+                size,
+                quantity: 1,
+              });
+            } else {
+              openAuthModal();
+            }
+          }}
+        >
           <ShoppingBag className="w-4 h-4" />
-          Add to Bag
+          {isPending ? "Adding..." : "Add to Bag"}
         </Button>
         <Button variant="outline" size="icon" className="w-14 h-auto">
           <Heart className="w-5 h-5" />
