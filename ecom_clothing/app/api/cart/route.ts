@@ -122,7 +122,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: "Cart not found" }, { status: 404 });
     }
 
-    const item = cart.items.id(itemId);
+    const item = cart.items.find((i: any) => i._id.toString() === itemId);
     if (item) {
       item.quantity = quantity;
       await cart.save();

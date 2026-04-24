@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCartQuery, useUpdateCartItem, useRemoveFromCart, CartItem } from "@/hooks/useCart";
 import { useIsAuthenticated } from "@/hooks/useAuth";
 import { useAuthModal } from "@/context/AuthModalContext";
+import { Icon } from "@iconify/react";
 
 export default function CartPage() {
   const { data: isAuthenticated, isLoading: isAuthLoading } = useIsAuthenticated();
@@ -134,10 +135,10 @@ export default function CartPage() {
                               onClick={() => removeItem(item._id)}
                               className="text-xs text-zinc-400 hover:text-red-600 transition-colors flex items-center gap-1 group"
                             >
-                              <iconify-icon
+                              <Icon
                                 icon="solar:trash-bin-trash-linear"
                                 className="text-sm group-hover:scale-110 transition-transform"
-                              ></iconify-icon>
+                              />
                               <span className="underline underline-offset-4 decoration-transparent group-hover:decoration-red-200">
                                 Remove
                               </span>
@@ -214,11 +215,10 @@ export default function CartPage() {
 
                 <button className="w-full bg-zinc-900 text-white py-4 rounded-sm text-sm font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 shadow-sm mb-4">
                   Proceed to Checkout
-                  <iconify-icon
+                  <Icon
                     icon="solar:arrow-right-linear"
-                    stroke-width="1.5"
                     className="text-lg"
-                  ></iconify-icon>
+                  />
                 </button>
               </div>
             </div>

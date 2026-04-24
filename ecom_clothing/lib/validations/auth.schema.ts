@@ -36,7 +36,7 @@ export const signupSchema = z.object({
     .min(1, "Date of birth is required"),
   gender: z
     .enum(["male", "female"], {
-      required_error: "Please select a gender",
+      message: "Please select a gender",
     }),
   password: z
     .string()

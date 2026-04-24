@@ -47,7 +47,7 @@ export default function ProductDetailsInfo({
   // Discount calculation
   const hasDiscount = !!product.originalPrice;
   const currentPrice = parseFloat(product.price.replace(/[^0-9.]/g, ""));
-  const oldPrice = hasDiscount ? parseFloat(product.originalPrice.replace(/[^0-9.]/g, "")) : 0;
+  const oldPrice = hasDiscount ? parseFloat(product.originalPrice!.replace(/[^0-9.]/g, "")) : 0;
   const discountPercent = hasDiscount ? Math.round(((oldPrice - currentPrice) / oldPrice) * 100) : 0;
 
   return (

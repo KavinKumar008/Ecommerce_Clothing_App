@@ -5,7 +5,7 @@ import BrandStory from "@/models/BrandStory";
 export async function GET() {
   try {
     await dbConnect();
-    
+
     // Fetch the first brand story document
     const brandStory = await BrandStory.findOne({});
 

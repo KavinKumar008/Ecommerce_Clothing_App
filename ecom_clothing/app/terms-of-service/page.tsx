@@ -9,7 +9,19 @@ export const metadata: Metadata = {
     "Review the terms and conditions governing your use of AURA's website and services.",
 };
 
-const sections = [
+interface ContentBlock {
+  subtitle?: string;
+  text?: string;
+  list?: string[];
+}
+
+interface Section {
+  id: string;
+  title: string;
+  content: ContentBlock[];
+}
+
+const sections: Section[] = [
   {
     id: "acceptance-of-terms",
     title: "1. Acceptance of Terms",

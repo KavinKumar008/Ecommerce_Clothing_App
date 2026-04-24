@@ -9,7 +9,19 @@ export const metadata: Metadata = {
     "Learn how AURA collects, uses, and protects your personal information. Your privacy is our priority.",
 };
 
-const sections = [
+interface ContentBlock {
+  subtitle?: string;
+  text?: string;
+  list?: string[];
+}
+
+interface Section {
+  id: string;
+  title: string;
+  content: ContentBlock[];
+}
+
+const sections: Section[] = [
   {
     id: "information-we-collect",
     title: "1. Information We Collect",
